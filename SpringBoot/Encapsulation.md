@@ -20,6 +20,7 @@ public enum ResultEnum {
 
     ResultEnum(int code, boolean status, String message) {
         this.code = code;
+        this.status = status;
         this.message = message;
     }
 
