@@ -20,3 +20,9 @@ MyFirstFunction(int a_b_c){
     a_b_c ...
 }
 ```
+
+### 字体安装网址
+
+https://www.nerdfonts.com/font-downloads
+
+### 安装 WSL2 到除了 C 盘以外的位置
