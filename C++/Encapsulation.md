@@ -112,3 +112,71 @@ std::optional
 比如这里的 Data属性有几率可能是空 为了安全 使用这个关键字定义了一下
 因为std::optional保存的好像是对象的引用 所以需要使用指针来获得真实值
 ```
+
+## 封装统一单例父类
+
+### 2024/8/25
+
+做项目的时候会遇见很多地方需要用到单例模式，比如连接池以及其他各种池化技术，肯定是一个地方初始化，其他地方用就行的那种。
+
+```C++
+#ifndef __SINGLETON_H__
+#define __SINGLETON_H__
+#include <iostream>
+#include <stdexcept>
+#include <mutex>
+
+template <typename T>
+class Singleton
+{
+public:
+    Singleton(const Singleton &) = delete;
+    Singleton &operator=(const Singleton &) = delete;
+
+public:
+    static std::unique_ptr<T> instance;
+    template <typename... Args>
+    static T &Initalization(Args &&..._args)
+    {
+        static std::once_flag flag;
+        std::call_once(flag, [&]()
+                       { instance = std::make_unique<T>(std::forward<Args>(_args)...); });
+        return *instance;
+    }
+    static T &GetInstance()
+    {
+        if (instance == nullptr)
+        {
+            throw std::runtime_error("Singleton instance has not been initialized");
+        }
+        else
+        {
+            return *instance;
+        }
+    }
+
+    ~Singleton() {
+
+    };
+
+private:
+protected:
+    Singleton() {};
+};
+
+// 在源文件中定义静态成员变量
+template <typename T>
+std::unique_ptr<T> Singleton<T>::instance = nullptr; // 或者直接初始化为 nullptr
+
+#endif // __SINGLETON_H__
+```
+
+学习的新关键字
+
+```C++
+std::call_once
+```
+
+这个官方给的是只有当第一次调用的时候才会进入，但是目前似乎好像并不是，等后续有空再研究研究，可能是我的一些变量没搞对，导致他里面的回调函数出现了问题。  
+遇见的问题有以下  
+当一个类内有静态成员变量时，如果不是一些字面关键字、例如 char int 这种那么就需要在类外初始化。
