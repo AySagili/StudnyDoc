@@ -49,3 +49,16 @@ export LESS_TERMCAP_us=$'\E[01;32m'
 ```
 
 https://blog.csdn.net/xc18113397842/article/details/132637528?utm_medium=distribute.pc_relevant.none-task-blog-2~default~baidujs_baidulandingword~default-0-132637528-blog-132202467.235^v43^pc_blog_bottom_relevance_base1&spm=1001.2101.3001.4242.1&utm_relevant_index=3
+
+### 修复 WSLG 中 GUI 不显示中文的情况 在容器内输入以下命令
+
+Fedora  
+sudo yum install wqy-microhei-fonts wqy-zenhei-fonts  
+sudo dnf install fontconfig  
+在/root/.bashrc 末尾增加以下两行  
+export LANG=zh_CN.UTF-8
+export LC_ALL=zh_CN.UTF-8  
+输入  
+source ~/.bashrc  
+fc-cache -fv  
+即可
